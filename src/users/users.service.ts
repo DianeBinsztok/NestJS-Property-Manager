@@ -11,4 +11,10 @@ export class UsersService {
     createUser(newUser:{}):{}{
         return newUser;
     }
+    updateUser(id:string, updatedUser:{}){
+        return updatedUser;
+    }
+    deleteUser(id:string){
+        return "<h1>Utilisateur n°"+id+" supprimé</h1>"
+    }
 }
