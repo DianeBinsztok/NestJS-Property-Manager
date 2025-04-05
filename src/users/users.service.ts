@@ -2,10 +2,17 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class UsersService {
-    getAllUsers(role?:string):string{
-        console.log(role);
+    getAllUsers(role?:string, city?:string):string{
+        
+        if(role || city){
+            let resultString = "<h1>Les utilisateurs :</h1>";
         if(role){
-            return "<h1>Tous les utilisateurs avec le role "+role+"</h1>";
+            resultString += "<p>Avec le rôle: "+role+"</p>";
+        }
+        if(city){
+            resultString += "<p>De la ville: "+city+"</p>";
+        }
+            return resultString;
         }else{
             return "<h1>Tous les utilisateurs</h1>";
         }

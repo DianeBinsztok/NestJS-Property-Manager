@@ -14,8 +14,8 @@ export class UsersController {
 
     // Tous les utilisateurs
     @Get() // GET /users OU GET /users?role=unRoleDefini
-    getAllUsers(@Query('role')role?:string): string {
-      return this.usersService.getAllUsers(role);
+    getAllUsers(@Query()query:{role?:string; city?:string}): string {
+      return this.usersService.getAllUsers(query.role, query.city);
     }
     // Un utilisateur par son id
     @Get(':id') // GET /users/:id
