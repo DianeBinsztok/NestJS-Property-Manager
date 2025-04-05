@@ -1,4 +1,4 @@
-import {Controller, Get, Param } from '@nestjs/common';
+import {Controller, Get, Param, Query } from '@nestjs/common';
 import { UsersService } from './users.service';
 
 /*
@@ -13,9 +13,9 @@ export class UsersController {
     constructor(private readonly usersService: UsersService) {}
 
     // Tous les utilisateurs
-    @Get() // GET /users
-    getAllUsers(): string {
-      return this.usersService.getAllUsers();
+    @Get() // GET /users OU GET /users?role=unRoleDefini
+    getAllUsers(@Query('role')role?:string): string {
+      return this.usersService.getAllUsers(role);
     }
     // Un utilisateur par son id
     @Get(':id') // GET /users/:id
