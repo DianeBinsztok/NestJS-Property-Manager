@@ -5,7 +5,6 @@ import { isSet } from 'util/types';
 export class UsersService {
 
    private users =[
-        
         {
             "id":0,
             "name":"Jean",
@@ -61,8 +60,17 @@ export class UsersService {
         resultString += "</ul>"
         return resultString;
     };
+
     getOneUser(id: string):string{
-        return "<h1>Utilisateur n° "+id+"</h1>";
+        let resultString ="";
+        let users = this.users;
+        let targetUser = users.find((user)=>user.id==parseInt(id, 10));
+        if(targetUser){
+            resultString +=`<h1>Utilisateur n° ${targetUser.id} :</h1><p>${targetUser.name} ${targetUser.surname}</p><p>${targetUser.email}</p><p>${targetUser.role}</p>`;
+        }else{
+            resultString += "<h1>Aucun utilisateur ne correspond à cet identifiant</h1>"
+        }
+        return resultString;
     }
     createUser(newUser:{}):{}{
         return newUser;
