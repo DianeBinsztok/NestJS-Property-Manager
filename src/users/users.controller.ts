@@ -1,4 +1,4 @@
-import {Body, Controller, Get, Post, Param, Patch, Delete } from '@nestjs/common';
+import {Body, Controller, Get, Post, Param, Patch, Delete, Query } from '@nestjs/common';
 import { UsersService } from './users.service';
 
 
@@ -8,8 +8,8 @@ export class UsersController {
 
     // Afficher tous les utilisateurs : GET /users OU GET /users?role=unRoleDefini
     @Get()
-    getAllUsers(): string {
-      return this.usersService.getAllUsers();
+    getAllUsers(@Query('role')role?:"tenant"|"owner"|"admin"):string {
+      return this.usersService.getAllUsers(role);
     }
     // Afficher un utilisateur par son id : GET /users/:id
     @Get(':id') // 

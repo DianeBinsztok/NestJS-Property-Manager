@@ -44,19 +44,28 @@ export class UsersService {
         }
     ];
 
-    getAllUsers():string{
+    getAllUsers(role?:"tenant"|"owner"|"admin"):string{
         let resultString ="";
         let users = this.users;
-        if(isSet(users)&&users.length>0){
-            resultString = "<h1>Tous les utilisateurs :</h1><ul>"
-            // Ne fonctionne pas si on donne l'objet user en param sans le décomposer, car les propriétés user.name, user.role etc. n'existent pas
-            users.forEach(({name, surname, email, role})=>{
-                resultString+=`<li><h2>${name} ${surname}</h2><p>${email}</p><p>${role}</p></li>`
-            })
+        if(users&&users.length>0){
+            if(role){
+                resultString = `<h1>Tous les utilisateurs ${role}:</h1><ul>`;
+                // Ne fonctionne pas si on donne l'objet user en param sans le décomposer, car les propriétés user.name, user.role etc. n'existent pas si user est vide
+                let targetUsers = users.filter(user=>user.role === role);
+                targetUsers.forEach(({name, surname, email, role})=>{
+                    resultString+=`<li><h2>${name} ${surname}</h2><p>${email}</p><p>${role}</p></li>`
+                })
+            }else{
+                resultString = "<h1>Tous les utilisateurs :</h1><ul>"
+                // Ne fonctionne pas si on donne l'objet user en param sans le décomposer, car les propriétés user.name, user.role etc. n'existent pas si user est vide
+                users.forEach(({name, surname, email, role})=>{
+                    resultString+=`<li><h2>${name} ${surname}</h2><p>${email}</p><p>${role}</p></li>`
+                })
+            }
+
         }else{
             resultString = "<h1>Aucun utilisateur enregistré</h1>"
         }
-
         resultString += "</ul>"
         return resultString;
     };
@@ -72,6 +81,7 @@ export class UsersService {
         }
         return resultString;
     }
+
     createUser(newUser:{}):{}{
         return newUser;
     }
