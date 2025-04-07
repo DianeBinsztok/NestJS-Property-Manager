@@ -102,7 +102,14 @@ export class UsersService {
             return "<h1>Utilisateur inconnu</h1><p>L'identifiant de l'utilisateur que vous souhaitez modifier n'existe pas</p>"
         }
     }
-    deleteUser(id:string){
-        return "<h1>Utilisateur n°"+id+" supprimé</h1>";
+    deleteUser(id:number){
+        let targetUser = this.users.find(user=>user.id== id);
+        if(targetUser){
+            let targetUserIndex = this.users.indexOf(targetUser);
+            this.users.splice(targetUserIndex, 1);
+            return this.users;
+        }else{
+            return "<h1>Utilisateur inconnu</h1><p>L'identifiant de l'utilisateur que vous souhaitez supprimer n'existe pas</p>"
+        }
     }
 }

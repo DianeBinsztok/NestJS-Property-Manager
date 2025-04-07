@@ -30,6 +30,6 @@ export class UsersController {
     // Modifier un utilisateur : DELETE /users/:id
     @Delete(":id") 
     deleteUser(@Param('id')id:string): {} {
-        return this.usersService.deleteUser(id);
+        return this.usersService.deleteUser(parseInt(id, 10));
     }
 }
