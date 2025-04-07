@@ -18,15 +18,14 @@ export class UsersController {
     }
     // Ajouter un utilisateur : POST /users
     @Post()
-    // Renvoie un objet : {}
     createUser(@Body()NewUserData:{name: string, surname:string, email:string, role:"owner"|"tenant"|"admin"}): {}{
         return this.usersService.createUser(NewUserData);
     }
     // Modifier un utilisateur : PATCH /users/:id
     @Patch(":id")
-    // Renvoie un objet : {}
-    updateUser(@Param('id')id:string, @Body()updatedUserData:{}): {} {
-        return this.usersService.updateUser(id, updatedUserData);
+    // Les propriétés de l'objet passé au Body sont optionnelles : on peut remplacer tout ou partie de l'utilisateur sélectionné
+    updateUser(@Param('id')id:string, @Body()updatedUserData:{name?: string, surname?:string, email?:string, role?:"owner"|"tenant"|"admin"}): {} {
+        return this.usersService.updateUser(parseInt(id, 10), updatedUserData);
     }
     // Modifier un utilisateur : DELETE /users/:id
     @Delete(":id") 

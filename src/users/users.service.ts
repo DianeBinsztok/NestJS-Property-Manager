@@ -92,10 +92,17 @@ export class UsersService {
         this.users.push(newUser);
         return newUser;
     }
-    updateUser(id:string, updatedUser:{}){
-        return updatedUser;
+
+    updateUser(id:number, updatedUser:{name?: string, surname?:string, email?:string, role?:"owner"|"tenant"|"admin"}){
+        let targetUser = this.users.find(user=>user.id== id);
+        if(targetUser){
+           this.users[id]= {...targetUser, ...updatedUser};
+           return this.users[id];
+        }else{
+            return "<h1>Utilisateur inconnu</h1><p>L'identifiant de l'utilisateur que vous souhaitez modifier n'existe pas</p>"
+        }
     }
     deleteUser(id:string){
-        return "<h1>Utilisateur n°"+id+" supprimé</h1>"
+        return "<h1>Utilisateur n°"+id+" supprimé</h1>";
     }
 }
