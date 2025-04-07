@@ -19,12 +19,12 @@ export class UsersController {
     // Ajouter un utilisateur : POST /users
     @Post()
     // Renvoie un objet : {}
-    createUser(@Body()NewUserData:{}): {}{
+    createUser(@Body()NewUserData:{name: string, surname:string, email:string, role:"owner"|"tenant"|"admin"}): {}{
         return this.usersService.createUser(NewUserData);
     }
     // Modifier un utilisateur : PATCH /users/:id
     @Patch(":id")
-        // Renvoie un objet : {}
+    // Renvoie un objet : {}
     updateUser(@Param('id')id:string, @Body()updatedUserData:{}): {} {
         return this.usersService.updateUser(id, updatedUserData);
     }

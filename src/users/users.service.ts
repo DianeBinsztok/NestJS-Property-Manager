@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { isSet } from 'util/types';
 
 @Injectable()
 export class UsersService {
@@ -85,7 +84,12 @@ export class UsersService {
         return resultString;
     }
 
-    createUser(newUser:{}):{}{
+    createUser(newUserData:{name: string, surname:string, email:string, role:"owner"|"tenant"|"admin"}):{}{
+        // (L'id sera auto-incrémenté en BDD)
+        let newUserId = this.users.length;
+        // Affecter au nouvel utilisateur: son id et les données newUserData (objet détructuré) 
+        let newUser = {id:newUserId, ...newUserData};
+        this.users.push(newUser);
         return newUser;
     }
     updateUser(id:string, updatedUser:{}){
