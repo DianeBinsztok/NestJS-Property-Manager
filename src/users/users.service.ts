@@ -3,7 +3,8 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class UsersService {
 
-   private users =[
+    //Imposer un type à users. Ici : tableau d'objets aux propriétés spécifiques
+   private users : { id: number; name: string; surname: string; email: string; role: "admin" | "owner" | "tenant"; }[] =[
         {
             "id":0,
             "name":"Jean",
@@ -43,45 +44,28 @@ export class UsersService {
         }
     ];
 
-    getAllUsers(role?:"tenant"|"owner"|"admin"):string{
-        let resultString ="";
+    getAllUsers(role?:"tenant"|"owner"|"admin"):{}[]|null{
         let users = this.users;
-        if(users&&users.length>0){
+        if(users && users.length>0){
             if(role){
-                if(role === "tenant"|| role ==="owner"|| role ==="admin"){
-                    resultString = `<h1>Tous les utilisateurs ${role}:</h1><ul>`;
-                    let targetUsers = users.filter(user=>user.role === role);
-                    targetUsers.forEach(({name, surname, email, role})=>{
-                        resultString+=`<li><h2>${name} ${surname}</h2><p>${email}</p><p>${role}</p></li>`
-                    })
-                }else{
-                    resultString = `<h1>Le role "${role}" n'existe pas</h1>`;
-                }
-
+                let targetUsers = users.filter(user=>user.role == role);
+                return targetUsers;
             }else{
-                resultString = "<h1>Tous les utilisateurs :</h1><ul>"
-                users.forEach(({name, surname, email, role})=>{
-                    resultString+=`<li><h2>${name} ${surname}</h2><p>${email}</p><p>${role}</p></li>`
-                })
+                return users;
             }
-
         }else{
-            resultString = "<h1>Aucun utilisateur enregistré</h1>";
+            return null;
         }
-        resultString += "</ul>"
-        return resultString;
-    };
+    }
 
-    getOneUser(id: string):string{
-        let resultString ="";
+    getOneUser(id: number):{id:number,name: string, surname:string, email:string, role:"owner"|"tenant"|"admin"}|null{
         let users = this.users;
-        let targetUser = users.find((user)=>user.id==parseInt(id, 10));
+        let targetUser = users.find((user)=>user.id==id);
         if(targetUser){
-            resultString +=`<h1>Utilisateur n° ${targetUser.id} :</h1><p>${targetUser.name} ${targetUser.surname}</p><p>${targetUser.email}</p><p>${targetUser.role}</p>`;
+            return targetUser;
         }else{
-            resultString += "<h1>Aucun utilisateur ne correspond à cet identifiant</h1>"
+            return null;
         }
-        return resultString;
     }
 
     createUser(newUserData:{name: string, surname:string, email:string, role:"owner"|"tenant"|"admin"}):{}{
@@ -93,23 +77,23 @@ export class UsersService {
         return newUser;
     }
 
-    updateUser(id:number, updatedUser:{name?: string, surname?:string, email?:string, role?:"owner"|"tenant"|"admin"}){
-        let targetUser = this.users.find(user=>user.id== id);
+    updateUser(id:number, updatedUser:{name?: string, surname?:string, email?:string, role?:"owner"|"tenant"|"admin"}):{}|null{
+        let targetUser = this.getOneUser(id);
         if(targetUser){
-           this.users[id]= {...targetUser, ...updatedUser};
+           this.users[id]= {...targetUser, ...updatedUser, id: targetUser.id };
            return this.users[id];
         }else{
-            return "<h1>Utilisateur inconnu</h1><p>L'identifiant de l'utilisateur que vous souhaitez modifier n'existe pas</p>"
+            return null;
         }
     }
-    deleteUser(id:number){
+    deleteUser(id:number):{}[]|null{
         let targetUser = this.users.find(user=>user.id== id);
         if(targetUser){
             let targetUserIndex = this.users.indexOf(targetUser);
             this.users.splice(targetUserIndex, 1);
             return this.users;
         }else{
-            return "<h1>Utilisateur inconnu</h1><p>L'identifiant de l'utilisateur que vous souhaitez supprimer n'existe pas</p>"
+            return null;
         }
     }
 }
