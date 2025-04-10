@@ -5,7 +5,7 @@ import { UserDTO } from './user.dto';
 @Injectable()
 export class UsersService {
 
-    //Imposer un type à users. Ici : tableau d'objets aux propriétés spécifiques
+    //Imposer un type à users. Ici : un tableau d'objets UserDTO
    private users : UserDTO[] =[
         {
             "id":0,
