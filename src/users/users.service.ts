@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
+import { UserDTO } from './user.dto';
+
 
 @Injectable()
 export class UsersService {
 
     //Imposer un type à users. Ici : tableau d'objets aux propriétés spécifiques
-   private users : { id: number; name: string; surname: string; email: string; role: "admin" | "owner" | "tenant"; }[] =[
+   private users : UserDTO[] =[
         {
             "id":0,
             "name":"Jean",
@@ -44,12 +46,17 @@ export class UsersService {
         }
     ];
 
-    getAllUsers(role?:"tenant"|"owner"|"admin"):{}[]|null{
+    getAllUsers(role?:"tenant"|"owner"|"admin"):UserDTO[]|null{
         let users = this.users;
         if(users && users.length>0){
             if(role){
                 let targetUsers = users.filter(user=>user.role == role);
-                return targetUsers;
+                if(targetUsers){
+                    return targetUsers;
+                }else{
+                    return null;
+                }
+                
             }else{
                 return users;
             }
@@ -58,7 +65,7 @@ export class UsersService {
         }
     }
 
-    getOneUser(id: number):{id:number,name: string, surname:string, email:string, role:"owner"|"tenant"|"admin"}|null{
+    getOneUser(id: number):UserDTO|null{
         let users = this.users;
         let targetUser = users.find((user)=>user.id==id);
         if(targetUser){
@@ -68,7 +75,7 @@ export class UsersService {
         }
     }
 
-    createUser(newUserData:{name: string, surname:string, email:string, role:"owner"|"tenant"|"admin"}):{}{
+    createUser(newUserData:{name: string, surname:string, email:string, role:"owner"|"tenant"|"admin"}):UserDTO{
         // (L'id sera auto-incrémenté en BDD)
         let newUserId = this.users.length;
         // Affecter au nouvel utilisateur: son id et les données newUserData (objet détructuré) 
@@ -77,7 +84,7 @@ export class UsersService {
         return newUser;
     }
 
-    updateUser(id:number, updatedUser:{name?: string, surname?:string, email?:string, role?:"owner"|"tenant"|"admin"}):{}|null{
+    updateUser(id:number, updatedUser:{name?: string, surname?:string, email?:string, role?:"owner"|"tenant"|"admin"}):UserDTO|null{
         let targetUser = this.getOneUser(id);
         if(targetUser){
            this.users[id]= {...targetUser, ...updatedUser, id: targetUser.id };
@@ -86,7 +93,8 @@ export class UsersService {
             return null;
         }
     }
-    deleteUser(id:number):{}[]|null{
+
+    deleteUser(id:number):UserDTO[]|null{
         let targetUser = this.users.find(user=>user.id== id);
         if(targetUser){
             let targetUserIndex = this.users.indexOf(targetUser);
