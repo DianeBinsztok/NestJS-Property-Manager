@@ -1,10 +1,9 @@
 import { Module } from '@nestjs/common';
-import { AddressesController } from './addresses.controller';
 import { AddressesService } from './addresses.service';
 
 
 @Module({
-    controllers: [AddressesController],
+  // Pas besoin de contrôleur: les adresses seront instanciées par d'autres classes mais pas accessibles directement
     providers: [AddressesService],
   })
 export class AddressesModule {}
