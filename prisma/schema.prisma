@@ -1,0 +1,42 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// Les modèles : 
+
+// Créer d'abord un type "Role"
+enum Role {
+  admin
+  owner
+  tenant
+}
+
+model User {
+  id      Int    @id @default(autoincrement())
+  email   String @unique
+  name    String
+  surname String
+  role    Role
+}
+
+model Address {
+  id                Int    @id @default(autoincrement())
+  streetNumber      String
+  streetTypeAndName String
+  additionalInfos   String
+  city              String
+  zipCode           String
+  country           String
+}
