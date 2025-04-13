@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UserDTO } from './user.dto';
-
+import { Hash } from 'crypto';
 
 @Injectable()
 export class UsersService {
@@ -8,41 +8,53 @@ export class UsersService {
     //Imposer un type à users. Ici : un tableau d'objets UserDTO
    private users : UserDTO[] =[
         {
-            "id":0,
-            "name":"Jean",
-            "surname":"Leclerc",
-            "email":"jeanleclerc@gmail.com",
-            "role":"admin"
+            "id": 0,
+            "name": "Jean",
+            "surname": "Leclerc",
+            "email": "jeanleclerc@gmail.com",
+            "phoneNumber": "",
+            "password": strHash("test"),
+            "role": "admin",
         },{
             "id":1,
             "name":"Pierre",
             "surname":"Marchand",
             "email":"pierremarchand@yahoo.com",
-            "role":"owner"
+            "phoneNumber": "",
+            "password": strHash("test"),
+            "role": "admin",
         },{
             "id":2,
             "name":"Isabelle",
             "surname":"Dubois",
             "email":"isadubois@hotmail.fr",
-            "role":"tenant"
+            "phoneNumber": "",
+            "password": strHash("test"),
+            "role": "admin",
         },{
             "id":3,
             "name":"Patrick",
             "surname":"Laforet",
             "email":"patlaforet@gmail.com",
-            "role":"owner"
+            "phoneNumber": "",
+            "password": strHash("test"),
+            "role": "admin",
         },{
             "id":4,
             "name":"Sylvie",
             "surname":"François",
             "email":"sylfrancois@protonmail.com",
-            "role":"owner"
+            "phoneNumber": "",
+            "password": strHash("test"),
+            "role": "admin",
         },{
             "id":5,
             "name":"Jeanne",
             "surname":"Le gros",
             "email":"jeannelegros@gmail.com",
-            "role":"tenant"
+            "phoneNumber": "",
+            "password": strHash("test"),
+            "role": "admin",
         }
     ];
 
@@ -75,7 +87,7 @@ export class UsersService {
         }
     }
 
-    createUser(newUserData:{name: string, surname:string, email:string, role:"owner"|"tenant"|"admin"}):UserDTO{
+    createUser(newUserData:{name: string, surname:string, email:string, phoneNumber?:string, password: Hash, role:"owner"|"tenant"|"admin"}):UserDTO{
         // (L'id sera auto-incrémenté en BDD)
         let newUserId = this.users.length;
         // Affecter au nouvel utilisateur: son id et les données newUserData (objet détructuré) 
@@ -84,7 +96,7 @@ export class UsersService {
         return newUser;
     }
 
-    updateUser(id:number, updatedUser:{name?: string, surname?:string, email?:string, role?:"owner"|"tenant"|"admin"}):UserDTO|null{
+    updateUser(id:number, updatedUser:{name?: string, surname?:string, email?:string, phoneNumber?:string, password?: Hash, role?:"owner"|"tenant"|"admin"}):UserDTO|null{
         let targetUser = this.getOneUser(id);
         if(targetUser){
            this.users[id]= {...targetUser, ...updatedUser, id: targetUser.id };
@@ -105,3 +117,7 @@ export class UsersService {
         }
     }
 }
+function strHash(arg0: string): Hash {
+    throw new Error('Function not implemented.');
+}
+

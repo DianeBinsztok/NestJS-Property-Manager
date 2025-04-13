@@ -1,6 +1,7 @@
 import {Body, Controller, Get, Post, Param, Patch, Delete, Query, NotFoundException } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UserDTO } from './user.dto';
+import { Hash } from 'crypto';
 
 
 @Controller('users')
@@ -27,13 +28,13 @@ export class UsersController {
     }
     // Ajouter un utilisateur : POST /users
     @Post()
-    createUser(@Body()NewUserData:{name: string, surname:string, email:string, role:"owner"|"tenant"|"admin"}): {}|null{
+    createUser(@Body()NewUserData:{name: string, surname:string, email:string, phoneNumber?:string, password: Hash, role:"owner"|"tenant"|"admin"}): UserDTO|null{
         return this.usersService.createUser(NewUserData);
     }
     // Modifier un utilisateur : PATCH /users/:id
     @Patch(":id")
     // Les propriétés de l'objet passé au Body sont optionnelles : on peut remplacer tout ou partie de l'utilisateur sélectionné
-    updateUser(@Param('id')id:string, @Body()updatedUserData:{name?: string, surname?:string, email?:string, role?:"owner"|"tenant"|"admin"}): UserDTO|null {
+    updateUser(@Param('id')id:string, @Body()updatedUserData:{name?: string, surname?:string, email?:string, phoneNumber?:string, password?: Hash, role?:"owner"|"tenant"|"admin"}): UserDTO|null {
         let modifiedUser = this.usersService.updateUser(parseInt(id, 10), updatedUserData);
         if (!modifiedUser) {
           throw new NotFoundException(`Utilisateur n° ${id} introuvable - Il n'a pas pu être modifié`);
@@ -45,7 +46,7 @@ export class UsersController {
     deleteUser(@Param('id')id:string): UserDTO[]|null {
       let newUsersList = this.usersService.deleteUser(parseInt(id, 10));
       if (!newUsersList) {
-        throw new NotFoundException(` Utilisateur n° ${id} introuvable - Il ne peut pas être supprimé`);
+        throw new NotFoundException(`Utilisateur n° ${id} introuvable - Il ne peut pas être supprimé`);
       }
       return newUsersList; 
     }
