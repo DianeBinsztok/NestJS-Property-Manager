@@ -7,20 +7,20 @@ export class AuthController {
 
     @Get("login")
     getLogin(){
-        return this.authService.getLogin;
+        return this.authService.getLogin();
     }
 
     @Post("login")
     login(){
-        return this.authService.login;
+        return this.authService.login();
     }
 
     @Get("signup")
     getSignup(){
-        return this.authService.getSignup;
+        return this.authService.getSignup();
     }
     @Post("signup")
     signup(){
-        return this.authService.signup;
+        return this.authService.signup();
     }
 }
