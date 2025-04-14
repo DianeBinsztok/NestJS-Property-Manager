@@ -5,63 +5,6 @@ import { AddressDTO } from './address.dto';
 @Injectable()
 export class AddressesService {
 
-   private addresses : AddressDTO[] =[
-        {
-            "id":0,
-            "streetNumber":"3 bis",
-            "streetTypeAndName": "Quai de Tourny",
-            "additionalInfos":"",
-            "city": "Paris",
-            "zipCode" : "75015",
-            "country": "France"
-        },
-        {
-            "id":1,
-            "streetNumber":"18",
-            "streetTypeAndName": "Rue Aspasie Jules Caron",
-            "additionalInfos":"",
-            "city": "Arcueil",
-            "zipCode" : "94110",
-            "country": "France"
-        },
-        {
-            "id":2,
-            "streetNumber":"40",
-            "streetTypeAndName": "Rue Marcellin Berthelot",
-            "additionalInfos":"",
-            "city": "Valence",
-            "zipCode" : "26000",
-            "country": "France"
-        },
-        {
-            "id":3,
-            "streetNumber":"22",
-            "streetTypeAndName": "Avenue Marcel Dassault",
-            "additionalInfos":"",
-            "city": "Bordeaux",
-            "zipCode" : "33300",
-            "country": "France"
-        },
-                {
-            "id":4,
-            "streetNumber":"25",
-            "streetTypeAndName": "Quai des Chartrons",
-            "additionalInfos":"",
-            "city": "Bordeaux",
-            "zipCode" : "33000",
-            "country": "France"
-        },
-        {
-            "id":5,
-            "streetNumber":"16-18",
-            "streetTypeAndName": "Quay de Tourny",
-            "additionalInfos":"",
-            "city": "Paris",
-            "zipCode" : "75000",
-            "country": "France"
-        }    
-   ];
-
     // Toutes les méthodes nécessiterons une authentification de l'utilisateur
 
     // I - READ
