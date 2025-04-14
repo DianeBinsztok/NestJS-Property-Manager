@@ -33,6 +33,8 @@ CREATE TABLE `addresses` (
   `address_zipcode` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `address_city` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `address_country` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'France',
+  `address_created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `address_updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`address_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -115,6 +117,8 @@ CREATE TABLE `charges` (
   `charge_id` int unsigned NOT NULL AUTO_INCREMENT,
   `charge_label` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `charge_amount` decimal(10,2) unsigned NOT NULL,
+  `charge_created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `charge_updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `charge_fk_location_id` int unsigned NOT NULL,
   PRIMARY KEY (`charge_id`),
   KEY `charge_fk_location_id` (`charge_fk_location_id`),

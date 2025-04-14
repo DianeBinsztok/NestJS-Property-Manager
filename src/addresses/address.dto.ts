@@ -1,10 +1,7 @@
-import {Matches, IsString } from 'class-validator';
+import {Matches, IsString, IsDate } from 'class-validator';
 export class AddressDTO {
     
     id: number;
-
-    // Numéro de voie
-    @IsString()
 
     // Pour inclure les formats "18", "18 bis", "18A", "16-18", etc.
     @Matches(/^\d+[a-zA-Z\- ]*$/, { message: "Numéro de voie invalide" })
@@ -29,4 +26,12 @@ export class AddressDTO {
     // Pays
     @IsString()
     country: string;
+
+    // Géré par Prisma : ne sera pas présent dans le Body des POST ou PATCH
+    @IsDate()
+    createdAt: string;
+
+    // Géré par Prisma : ne sera pas présent dans le Body des POST ou PATCH
+    @IsDate()
+    updatedAt: string;
 }

@@ -1,5 +1,4 @@
-import { IsDate, IsEmail, IsEnum, IsPhoneNumber, IsString, IsStrongPassword, IsOptional } from 'class-validator';
-import { Hash } from 'crypto';
+import { IsEmail, IsEnum, IsPhoneNumber, IsString, IsStrongPassword, IsOptional, IsDate } from 'class-validator';
 
 export class UserDTO {
   id: number;
@@ -15,19 +14,19 @@ export class UserDTO {
 
   @IsOptional()
   @IsPhoneNumber()
-  phoneNumber?: string;
+  phoneNumber?: string | null;
 
   @IsStrongPassword()
-  password: Hash;
+  password: string;
 
   @IsEnum(["owner", "tenant", "admin"])
   role: "owner" | "tenant" | "admin";
 
   // Géré par Prisma : ne sera pas présent dans le Body des POST ou PATCH
   @IsDate()
-  createdAt: string;
-  
+  createdAt: Date;
+
   // Géré par Prisma : ne sera pas présent dans le Body des POST ou PATCH
   @IsDate()
-  updatedAt: string;
+  updatedAt: Date;
 }
