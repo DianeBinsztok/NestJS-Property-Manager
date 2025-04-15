@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import { IsEmail, IsEnum, IsPhoneNumber, IsString, IsStrongPassword, IsOptional, IsDate } from 'class-validator';
 
 export class UserDTO {
@@ -23,10 +24,12 @@ export class UserDTO {
   role: "owner" | "tenant" | "admin";
 
   // Géré par Prisma : ne sera pas présent dans le Body des POST ou PATCH
+  @Exclude()
   @IsDate()
   createdAt: Date;
 
   // Géré par Prisma : ne sera pas présent dans le Body des POST ou PATCH
+  @Exclude()
   @IsDate()
   updatedAt: Date;
 }

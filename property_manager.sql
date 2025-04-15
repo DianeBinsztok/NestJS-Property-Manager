@@ -38,7 +38,7 @@ CREATE TABLE `addresses` (
 
 DROP TABLE IF EXISTS `owners`;
 CREATE TABLE `owners` (
-  `owner_id` int unsigned NOT NULL AUTO_INCREMENT,
+  --`owner_id` int unsigned NOT NULL AUTO_INCREMENT,
   `owner_fk_user_id` int unsigned NOT NULL,
   `owner_fk_address_id` int unsigned NOT NULL,
   PRIMARY KEY (`owner_id`),

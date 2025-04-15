@@ -13,9 +13,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Les modèles : 
-
-// Créer d'abord un type "Role"
+// Les enums de User: roles utilisateurs
 enum Role {
   admin
   owner
@@ -32,6 +30,52 @@ model User {
   role        Role
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now()) @updatedAt
+  // Classes enfants :
+  owner       Owner?
+  tenant      Tenant?
+}
+
+model Owner {
+  id         Int         @id @default(autoincrement())
+  ownerships Ownership[]
+
+  // Clés étrangères
+  // Utilisateur
+  userId    Int      @unique
+  user      User     @relation(fields: [userId], references: [id])
+  // Adresse
+  addressId Int      @unique
+  address   Address? @relation(fields: [addressId], references: [id])
+}
+
+model Tenant {
+  id        Int       @id @default(autoincrement())
+  userId    Int       @unique
+  user      User      @relation(fields: [userId], references: [id])
+  tenancies Tenancy[]
+}
+
+model Ownership {
+  ownerId    Int
+  locationId Int
+  acquiredAt DateTime
+
+  owner    Owner    @relation(fields: [ownerId], references: [id])
+  location Location @relation(fields: [locationId], references: [id])
+
+  @@id([ownerId, locationId])
+}
+
+model Tenancy {
+  tenantId    Int
+  locationId  Int
+  moveInDate  DateTime
+  moveOutDate DateTime?
+
+  tenant   Tenant   @relation(fields: [tenantId], references: [id])
+  location Location @relation(fields: [locationId], references: [id])
+
+  @@id([tenantId, locationId])
 }
 
 model Address {
@@ -44,4 +88,44 @@ model Address {
   country           String
   createdAt         DateTime @default(now())
   updatedAt         DateTime @default(now()) @updatedAt
+
+  // Relation:
+  owners Owner[]
+}
+
+// Les enums de Location: 
+// 1 - Les types de biens à louer
+enum LocationType {
+  appartment
+  house
+  room
+  parking
+  storage
+}
+
+// 2 - Les scores DPE
+enum EPDScore {
+  A
+  B
+  C
+  D
+  E
+  F
+  G
+}
+
+model Location {
+  id         Int           @id @default(autoincrement())
+  name       String?
+  type       LocationType?
+  rooms      Int?
+  EPD        EPDScore?
+  surface    Int?
+  furnished  Boolean       @default(false)
+  rented     Boolean       @default(false)
+  rent       Decimal?
+  ownerships Ownership[]
+  tenancies  Tenancy[]
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @default(now()) @updatedAt
 }
