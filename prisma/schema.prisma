@@ -60,26 +60,30 @@ model Tenant {
 
 // Modèle de la table owner_has_location
 model Ownership {
+  // Clés étrangères
   ownerId    Int
   locationId Int
+  owner      Owner    @relation(fields: [ownerId], references: [userId])
+  location   Location @relation(fields: [locationId], references: [id])
+
   acquiredAt DateTime
 
-  owner    Owner    @relation(fields: [ownerId], references: [id])
-  location Location @relation(fields: [locationId], references: [id])
-
+  // Clé primaire : paire des clés étrangères
   @@id([ownerId, locationId])
 }
 
 // Modèle de la table tenant_has_location
 model Tenancy {
-  tenantId    Int
-  locationId  Int
+  // Clés étrangères
+  tenantId   Int
+  locationId Int
+  tenant     Tenant   @relation(fields: [tenantId], references: [userId])
+  location   Location @relation(fields: [locationId], references: [id])
+
   moveInDate  DateTime
   moveOutDate DateTime?
 
-  tenant   Tenant   @relation(fields: [tenantId], references: [id])
-  location Location @relation(fields: [locationId], references: [id])
-
+  // Clé primaire : paire des clés étrangères
   @@id([tenantId, locationId])
 }
 

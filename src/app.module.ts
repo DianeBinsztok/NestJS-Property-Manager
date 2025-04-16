@@ -10,11 +10,13 @@ import { UsersModule } from './users/users.module';
 import { OwnersModule } from './owners/owners.module';
 import { TenantsModule } from './tenants/tenants.module';
 import { LocationsModule } from './locations/locations.module';
+import { OwnershipsModule } from './ownerships/ownerships.module';
+import { TenanciesModule } from './tenancies/tenancies.module';
 
 
 
 @Module({
-  imports: [UsersModule, AuthModule, PrismaModule, OwnersModule, TenantsModule, LocationsModule],
+  imports: [UsersModule, AuthModule, PrismaModule, OwnersModule, TenantsModule, LocationsModule, OwnershipsModule, TenanciesModule],
   controllers: [AppController],
   providers: [AppService],
 })

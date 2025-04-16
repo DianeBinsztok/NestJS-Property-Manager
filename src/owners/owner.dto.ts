@@ -5,6 +5,6 @@ import { UserDTO } from 'src/users/user.dto';
 export class OwnerDTO extends UserDTO{
 
   address?:AddressDTO;
-
+  
   locations:LocationDTO[];
 }
