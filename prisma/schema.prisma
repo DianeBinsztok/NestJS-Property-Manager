@@ -27,7 +27,7 @@ model User {
   surname     String
   phoneNumber String?
   password    String
-  role        Role
+  role        Role?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now()) @updatedAt
   // Classes enfants :
@@ -36,25 +36,29 @@ model User {
 }
 
 model Owner {
-  id         Int         @id @default(autoincrement())
-  ownerships Ownership[]
-
   // Clés étrangères
   // Utilisateur
-  userId    Int      @unique
-  user      User     @relation(fields: [userId], references: [id])
+  // userId est à la fois une clé étrangère, référant à User, et la clé primaire de Owner
+  userId     Int         @unique
+  user       User        @relation(fields: [userId], references: [id])
   // Adresse
-  addressId Int      @unique
-  address   Address? @relation(fields: [addressId], references: [id])
+  addressId  Int?        @unique
+  address    Address?    @relation(fields: [addressId], references: [id])
+  // Lien vers la table owner_has_location
+  ownerships Ownership[]
 }
 
 model Tenant {
-  id        Int       @id @default(autoincrement())
+  // Clés étrangères
+  // Utilisateur
+  // userId est à la fois une clé étrangère, référant à User, et la clé primaire de Tenant
   userId    Int       @unique
   user      User      @relation(fields: [userId], references: [id])
+  // Lien vers la table tenant_has_location
   tenancies Tenancy[]
 }
 
+// Modèle de la table owner_has_location
 model Ownership {
   ownerId    Int
   locationId Int
@@ -66,6 +70,7 @@ model Ownership {
   @@id([ownerId, locationId])
 }
 
+// Modèle de la table tenant_has_location
 model Tenancy {
   tenantId    Int
   locationId  Int
@@ -82,7 +87,7 @@ model Address {
   id                Int      @id @default(autoincrement())
   streetNumber      String
   streetTypeAndName String
-  additionalInfos   String
+  additionalInfos   String?
   city              String
   zipCode           String
   country           String
