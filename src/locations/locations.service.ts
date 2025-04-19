@@ -11,6 +11,31 @@ export class LocationsService {
 
     constructor(private prisma:PrismaService){}
 
+    // Tous les logements sans exception (accessible uniquement par un admin)
+    async getAllLocations():Promise<LocationSummaryDTO[]>{
+        try{
+            const locations:LocationSummaryDTO[] = await this.prisma.location.findMany({
+                include:{address:true}
+            });
+            // Mapper chaque location vers un LocationSummaryDTO : À partir du tableau des locations, retourner un nouveau tableau en transformant chaque élément en LocationSummaryDTO
+            return locations.map(location=> location={
+                id: location.id,
+                name: location.name,
+                type: location.type,
+                address: location.address,
+                rented: location.rented,
+            });
+
+        }catch(error){
+            // Intercepter l'erreur
+            console.error(`Erreur lors de la récupération des logements`, error);
+            // Renvoyer une erreur nestjs pour le contrôleur
+            throw new InternalServerErrorException('Impossible de récupérer les logements');
+        }
+    }
+        
+
+    // Tous les logements appartenant à un propriétaire donné
     async getAllLocationsByOwner(ownerId: number): Promise<LocationSummaryDTO[]> {
 
         try{
@@ -29,7 +54,7 @@ export class LocationsService {
             return ownerships
             // Ne garder que les Ownerships ayant une Location associé
             .filter(ownership => ownership.location !== null)
-            // Mapper chaque Ownership vers un LocationSummaryDTO : À partir du tableau des Ownerwships, retourner un nouveau tableau en transformant chaque élément en LocationDTO
+            // Mapper chaque Ownership vers un LocationSummaryDTO
             .map(ownership => ({
                 id: ownership.location.id,
                 name: ownership.location.name,
