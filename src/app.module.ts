@@ -12,12 +12,13 @@ import { TenantsModule } from './tenants/tenants.module';
 import { LocationsModule } from './locations/locations.module';
 import { OwnershipsModule } from './ownerships/ownerships.module';
 import { TenanciesModule } from './tenancies/tenancies.module';
+import { LocationService } from './location/location.service';
 
 
 
 @Module({
   imports: [UsersModule, AuthModule, PrismaModule, OwnersModule, TenantsModule, LocationsModule, OwnershipsModule, TenanciesModule],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, LocationService],
 })
 export class AppModule {}

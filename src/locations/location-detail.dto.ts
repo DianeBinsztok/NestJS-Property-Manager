@@ -4,8 +4,8 @@ import { AddressDTO } from 'src/addresses/address.dto';
 import { OwnerDTO } from 'src/owners/owner.dto';
 import { TenantDTO } from 'src/tenants/tenant.dto';
 
-export class LocationDTO{
-
+export class LocationDetailDTO{
+    
     id:number;
     
     @IsString()
@@ -18,6 +18,10 @@ export class LocationDTO{
     @IsOptional()
     @IsNumber()
     rooms?:number;
+
+    @IsOptional()
+    @Type(()=>AddressDTO)
+    address?:AddressDTO;
 
     //Score DPE : Diagnostique de Performance Énergétique
     @IsOptional()
@@ -45,10 +49,6 @@ export class LocationDTO{
     @IsOptional()
     @Type(()=>TenantDTO)
     tenant?:TenantDTO;
-
-    @IsOptional()
-    @Type(()=>AddressDTO)
-    address?:AddressDTO;
 
     // Géré par Prisma : ne sera pas présent dans le Body des POST ou PATCH
     @Exclude()
