@@ -1,6 +1,9 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 
+// plainToInstance transforme un objet en instance (s'il respecte le format de l'instance)
+import { plainToInstance } from 'class-transformer';
+
 // Les DTO
 import { LocationSummaryDTO } from '../locations/location-summary.dto';
 import { LocationDetailDTO } from './location-detail.dto';
@@ -17,14 +20,11 @@ export class LocationsService {
             const locations:LocationSummaryDTO[] = await this.prisma.location.findMany({
                 include:{address:true}
             });
-            // Mapper chaque location vers un LocationSummaryDTO : À partir du tableau des locations, retourner un nouveau tableau en transformant chaque élément en LocationSummaryDTO
-            return locations.map(location=> location={
-                id: location.id,
-                name: location.name,
-                type: location.type,
-                address: location.address,
-                rented: location.rented,
-            });
+            // Transformer chaque objet location en instance de LocationSummaryDTO
+            return plainToInstance(LocationSummaryDTO, locations, {
+                // Ignorer les propriétés non décorées avec @Expose()
+                excludeExtraneousValues: true 
+            })
 
         }catch(error){
             // Intercepter l'erreur
