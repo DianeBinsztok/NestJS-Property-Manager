@@ -5,9 +5,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { plainToInstance } from 'class-transformer';
 
 // Les DTO
-import { LocationSummaryDTO } from '../locations/location-summary.dto';
-import { LocationDetailDTO } from './location-detail.dto';
-import { OwnershipDTO } from 'src/ownerships/ownership.dto';
+import { LocationSummaryDTO } from './DTO/location-summary.dto';
 
 @Injectable()
 export class LocationsService {
@@ -17,7 +15,7 @@ export class LocationsService {
     // Tous les logements sans exception (accessible uniquement par un admin)
     async getAllLocations():Promise<LocationSummaryDTO[]>{
         try{
-            const locations:LocationSummaryDTO[] = await this.prisma.location.findMany({
+            const locations = await this.prisma.location.findMany({
                 include:{address:true}
             });
             // Transformer chaque objet location en instance de LocationSummaryDTO
@@ -39,7 +37,7 @@ export class LocationsService {
     async getAllLocationsByOwner(ownerId: number): Promise<LocationSummaryDTO[]> {
 
         try{
-            const ownerships:OwnershipDTO[] = await this.prisma.ownership.findMany({
+            let ownerships = await this.prisma.ownership.findMany({
                 where: { ownerId },
                 // Pour chaque Ownership, inclure la location
                   include: { 
@@ -51,17 +49,38 @@ export class LocationsService {
             });
 
             // Transformer les OwnershipDTO[] en LocationSummaryDTO[]
-            return ownerships
-            // Ne garder que les Ownerships ayant une Location associé
-            .filter(ownership => ownership.location !== null)
-            // Mapper chaque Ownership vers un LocationSummaryDTO
-            .map(ownership => ({
-                id: ownership.location.id,
-                name: ownership.location.name,
-                type: ownership.location.type,
-                address: ownership.location.address,
-                rented: ownership.location.rented,
-            }));
+
+            // 1 - filtrage : ne garder que les Ownerships ayant une Location associée
+
+            //La fonction type guard : ne renvoie true que si ownership.location n'est ni null ni undefined
+            function hasLocation(
+                ownership: typeof ownerships[number]
+                ): ownership is typeof ownerships[number] & { location: Location } {
+                return ownership.location !== undefined && ownership.location !== null;
+                }              
+
+           ownerships = ownerships.filter((hasLocation));
+            // 2 - map : transformer les objets 
+            // On peut appliquer plainToInstance à un tableau d'objets : il appliquera la transformation à chaque élément du tableau
+           return plainToInstance(
+            LocationSummaryDTO,
+            // Le tableau mappé (chaque ownership est devenu un ownership.location)
+            ownerships.map((ownership) => ownership.location),
+            { excludeExtraneousValues: true }
+          );
+          // Ou on aussi peut mapper le tableau, en applicant plainToInstance à chaque tour de map 
+          /*
+          return ownerships.map((ownership)=>{
+            return plainToInstance(
+                LocationSummaryDTO,
+                ownership,
+                {excludeExtraneousValues:true}
+            );
+          })
+        */
+          
+            
+              
         }catch(error){
             // Intercepter l'erreur
             console.error(`Erreur lors de la récupération des logements du propriétaire ${ownerId}`, error);

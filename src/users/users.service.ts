@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { UserDTO } from './user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class UsersService {
@@ -10,11 +11,21 @@ export class UsersService {
     async getAllUsers(role?:"tenant"|"owner"|"admin"):Promise<UserDTO[]|[]>{
         try{
             if(role){
-                return await this.prisma.user.findMany({
+                let users = await this.prisma.user.findMany({
                     where:{role:{equals:role}}
                 });
+                return plainToInstance(
+                    UserDTO,
+                    users,
+                    {excludeExtraneousValues:true}
+                );
             }else{
-                return await this.prisma.user.findMany();
+                let users = await this.prisma.user.findMany();
+                return plainToInstance(
+                    UserDTO,
+                    users,
+                    {excludeExtraneousValues:true}
+                );
             }
         }catch(error){
             console.error("Utilisateurs introuvables", error);
@@ -24,7 +35,12 @@ export class UsersService {
         
     async getOneUser(id: number):Promise<UserDTO|null>{
         try{
-            return await this.prisma.user.findUnique({where:{id}});
+            let user = await this.prisma.user.findUnique({where:{id}});
+            return plainToInstance(
+                UserDTO,
+                user,
+                {excludeExtraneousValues:true}
+            );
         }catch(error){
             console.error(`L\'utilisateur n° ${id} est introuvable`, error);
             return null;
@@ -33,31 +49,47 @@ export class UsersService {
 
     async createUser(newUserData:{name: string, surname:string, email:string, phoneNumber?:string, password: string, role:"owner"|"tenant"|"admin"}):Promise<UserDTO|null>{
         try{
-            return await this.prisma.user.create({data:newUserData});
+            let newUser = await this.prisma.user.create({data:newUserData});
+            return plainToInstance(
+                UserDTO,
+                newUser,
+                {excludeExtraneousValues:true}
+            );
+
         }catch(error){
             console.error("L'utilisateur n'a pas pu être créé", error);
-            return null;
+            throw new InternalServerErrorException("Impossible de créer l'utilisateur");
         }
     }
 
-    async updateUser(id:number, updatedUser:{name?: string, surname?:string, email?:string, phoneNumber?:string, password?: string, role?:"owner"|"tenant"|"admin"}):Promise<UserDTO|null>{
+    async updateUser(id:number, updatedUserData:{name?: string, surname?:string, email?:string, phoneNumber?:string, password?: string, role?:"owner"|"tenant"|"admin"}):Promise<UserDTO|null>{
         try {
-            return await this.prisma.user.update({
-              where: { id },
-              data: {
-                ...updatedUser,
-              },
-            });
+
+            let updatedUser = this.prisma.user.update({
+                where: { id },
+                data: {
+                  ...updatedUserData,
+                },
+              });
+              return plainToInstance(
+                UserDTO,
+                updatedUser,
+                {excludeExtraneousValues:true}
+            ); 
           } catch (error) {
             // Si l'utilisateur n'existe pas, lancer une exception
             console.error(`L\'utilisateur n° ${id} n'a pas été trouvé et ne peut pas être mis à jour`, error);
-            return null;
+            throw new InternalServerErrorException("Impossible de créer l'utilisateur");
           }
     }
 
     async deleteUser(id:number):Promise<UserDTO|null>{
         try{
-            return await this.prisma.user.delete({where:{id}});
+            return plainToInstance(
+                UserDTO,
+                this.prisma.user.delete({where:{id}}),
+                {excludeExtraneousValues:true}
+            ); 
         }catch(error){
             console.error(`L\'utilisateur n° ${id} n'a pas été trouvé et ne peut pas être supprimé`, error);
             return null;

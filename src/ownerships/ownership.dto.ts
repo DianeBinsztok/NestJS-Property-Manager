@@ -1,6 +1,6 @@
 import { Type } from 'class-transformer';
 import { IsDate, IsNumber } from 'class-validator';
-import { LocationDTO } from 'src/locations/location.dto';
+import { LocationSummaryDTO } from 'src/locations/DTO/location-summary.dto';
 import { OwnerDTO } from 'src/owners/owner.dto';
 
 // Relation many-to-many entre Owner et Location
@@ -17,10 +17,9 @@ export class OwnershipDTO {
     @IsDate()
     acquiredAt: Date;
   
-  
     @Type(() => OwnerDTO)
     owner?: OwnerDTO;
   
-    @Type(() => LocationDTO)
-    location?: LocationDTO;
+    @Type(() => LocationSummaryDTO)
+    location?: LocationSummaryDTO;
 }

@@ -9,7 +9,7 @@ export class LocationSummaryDTO{
     
     @Expose()
     @IsString()
-    name?:string;
+    name:string="Nouvelle location";
 
     @Expose()
     @IsOptional()

@@ -17,7 +17,7 @@ export class UsersController {
       return users;
     }
 
-    // Afficher un utilisateur par son id : GET /users/id
+    // Afficher un utilisateur par son id : GET /users/:id
     @Get(":id")
     async getOneUser(@Param('id')id:string):Promise<UserDTO> {
       let user = await this.usersService.getOneUser(parseInt(id, 10));

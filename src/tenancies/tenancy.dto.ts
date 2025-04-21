@@ -1,6 +1,6 @@
 import { Type } from 'class-transformer';
 import { IsOptional, IsDate, IsNumber } from 'class-validator';
-import { LocationDTO } from 'src/locations/location.dto';
+import { LocationSummaryDTO } from 'src/locations/DTO/location-summary.dto';
 import { TenantDTO } from 'src/tenants/tenant.dto';
 
 // Relation many-to-many entre Tenant et Location
@@ -24,6 +24,6 @@ export class TenancyDTO {
     @Type(() => TenantDTO)
     tenant?: TenantDTO;
   
-    @Type(() => LocationDTO)
-    location?: LocationDTO;
+    @Type(() => LocationSummaryDTO)
+    location?: LocationSummaryDTO;
 }
